@@ -1,0 +1,6 @@
+This is a normal looking text file.
+But it has hidden zero-width characters inside it.
+H‌e‌l‌l‌o‌ ‌W‌o‌r‌l‌d‌!
+The characters above have ZWCs between each visible letter.
+Checking...‌...‌...‌
+Done.

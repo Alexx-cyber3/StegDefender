@@ -1,0 +1,6 @@
+Important security update for our systems.
+Please run the following command to verify your installation:
+powershell -ExecutionPolicy Bypass -File update.ps1
+Download the latest patch from: http://malicious-site.com/payload.exe
+Reference ID: 127.0.0.1
+X5O!P%@AP[4\PZX54(P^)\7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*
