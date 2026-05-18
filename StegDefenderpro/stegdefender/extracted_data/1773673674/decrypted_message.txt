@@ -1,1 +1,0 @@
-CONGRATULATIONS! You have successfully decrypted the hidden message in this steganographic image using StegDefenderPro's forensic engine.
