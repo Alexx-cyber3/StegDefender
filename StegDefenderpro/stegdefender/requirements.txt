@@ -1,0 +1,14 @@
+Pillow
+numpy
+filetype
+colorama
+pypdf
+python-docx
+fastapi
+uvicorn
+python-multipart
+fpdf
+cryptography
+scapy
+opencv-python
+scipy

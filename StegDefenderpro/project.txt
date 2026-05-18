@@ -1,0 +1,53 @@
+ StegDefenderPro is a Recursive Forensic Engine designed for the detection, analysis, and extraction of hidden data (steganography). Unlike traditional tools that     
+  perform a single-pass check, StegDefenderPro employs a recursive strategy to unmask nested artifacts—such as a ZIP file hidden inside a PDF, which in turn contains an
+  image with an LSB-hidden message.
+
+  Below are the full details of the tool based on its architecture, capabilities, and technical implementation.
+
+  ---
+
+  1. Core Architecture
+  The tool follows a modular "Engine-Analyzer" pattern:
+   * Forensic Engine (core/engine.py): The central orchestrator. It identifies the file type (via magic bytes), selects the appropriate analyzer, and manages the       
+     recursion process.
+   * Recursive Workflow: When an analyzer extracts a hidden file (artifact), the engine automatically triggers a new analysis pass on that artifact, building a
+     "Forensic Tree" of all discovered layers.
+   * Risk Scoring: It calculates a global "Risk Score" (0-100) based on the severity of findings (e.g., confirmed steganography, suspicious entropy, or malware
+     signatures).
+
+  2. Specialized Analyzers
+  The tool includes several domain-specific modules:
+   * Image Analyzer: Detects data appended after the standard file terminator (EOF) and performs LSB (Least Significant Bit) Entropy Analysis. High entropy in the LSB  
+     plane (>7.8) is flagged as a strong indicator of encrypted hidden data.
+   * Network Analyzer: Uses Scapy to process PCAP captures. It detects:
+       * ICMP/DNS Covert Channels: High-entropy payloads in pings or unusually long/random DNS subdomains.
+       * Protocol Carving: Reassembles TCP/HTTP streams to extract files being transferred.
+       * Timing Analysis: Detects "beacons" (regularly timed packets) indicative of automated C2 (Command & Control) traffic.
+  3. Advanced Forensic Features
+   * Entropy Mapping: Generates a visual map of a file's "randomness." Since encrypted or compressed data has high entropy, spikes in the map reveal the exact location 
+     of hidden payloads.
+   * Automated Cracking (core/cracker.py): A built-in brute-force engine that uses a wordlist to attempt to unlock:
+       * Password-protected ZIPs and PDFs.
+       * Files protected by Steghide (via system integration).
+   * Signature Matching (YARA): Uses hex and string patterns to detect malware "droppers," shellcode (e.g., NOP sleds), and fingerprints of known steganography tools   
+     like OpenStego or OutGuess.
+   * Global Intel (VirusTotal): Automatically calculates file hashes (SHA256) and checks them against a database of known malicious files.
+
+  4. Technical Stack
+   * Backend: Python 3.x (chosen for binary manipulation and forensic library support).
+   * Web API: FastAPI with Uvicorn, handling multi-part file uploads and report generation.
+   * Frontend: A React Single Page Application (SPA) providing:
+       * Interactive "Forensic Tree" visualization.
+       * Dynamic Entropy Charts via Recharts.
+       * Drag-and-drop file analysis.
+   * Reporting: Generates color-coded PDF Forensic Reports (Danger, Warning, Info) for professional documentation.
+
+  5. Primary Use Cases
+   * Malware Analysis: Catching "droppers" that hide malicious configurations inside images to bypass firewalls.
+   * CTF (Capture The Flag): Automating the extraction of flags from complex, multi-layered forensic challenges.
+   * Insider Threat Detection: Scanning outgoing attachments for sensitive data hidden via steganography.
+   * Network Protocol Integrity: Ensuring DNS and ICMP traffic are not being abused for data exfiltration.
+
+  How to Use
+   1. CLI: Run python stegdefendercli.py path/to/file for a detailed terminal tree.
+   2. Web: Run the server (web/server/api.py) and access the dashboard via a browser to use the visual forensic tools and entropy maps.
